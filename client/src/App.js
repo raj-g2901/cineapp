@@ -17,9 +17,9 @@ import FollowPostScreen from './screens/FollowPostScreen';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Navbar />
+    < >
+      <BrowserRouter className="bg-black" >
+        <Navbar /> 
         <Routes>
           <Route path="/" element={<HomeScreen />} />
           <Route path="/users/signup" element={<SignupScreen />} />

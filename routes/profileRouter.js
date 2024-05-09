@@ -11,6 +11,7 @@ const router = express.Router();
     2. fields: no
     3. method: GET
     4. access: PRIVATE
+    5. authenticate: yes
 */
 
 router.get('/me', authenticate, async (req, res) => {
@@ -24,7 +25,7 @@ router.get('/me', authenticate, async (req, res) => {
     }
     res.status(200).json({ profile: profile });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -35,6 +36,7 @@ router.get('/me', authenticate, async (req, res) => {
     2. fields: many(can see in the profile model)
     3. method: POST
     4. access: PRIVATE
+    5. authenticate: yes
 */
 
 router.post('/', authenticate, async (req, res) => {
@@ -56,7 +58,8 @@ router.post('/', authenticate, async (req, res) => {
     } = req.body;
 
     let profileObj = {
-      user: req.user.id, // id gets from Token
+      user: req.user.id, //req.user gives the id, which comes from Token
+      // so jo profile create hui hai. wo kisi user ka hoga. kaun se user ka hoga...wo user ki id se pta lagega. so user ka object id le aao 
       company: company ? company : '',
       website: website ? website : '',
       location: location ? location : '',
@@ -82,7 +85,7 @@ router.post('/', authenticate, async (req, res) => {
     //insert to db
     let profile = new Profile(profileObj);
     await profile.save();
-    profile.populate('user');
+    profile.populate('user');// ref me user ko populate kr do
     if (image == '' || image == null || image == 'undefined') {
       image =
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTOkHm3_mPQ5PPRvGtU6Si7FJg8DVDtZ47rw&usqp=CAU';
@@ -92,7 +95,7 @@ router.post('/', authenticate, async (req, res) => {
       .status(200)
       .json({ msg: 'Post created successfully', profile: profile });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: `${err.message}` });
   }
 });
@@ -122,7 +125,7 @@ router.put('/', authenticate, async (req, res) => {
       linkedin,
       instagram,
     } = req.body;
-
+    
     let profile = await Profile.findOne({ user: req.user.id });
     if (!profile) {
       res.status(401).json({ msg: 'Profile not found' });
@@ -170,7 +173,7 @@ router.put('/', authenticate, async (req, res) => {
       profile: profile,
     });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -196,7 +199,7 @@ router.get('/users/:userId', async (req, res) => {
 
     res.status(200).json({ profile: profile });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -231,7 +234,7 @@ router.put('/experience', authenticate, async (req, res) => {
     profile = await profile.save();
     res.status(200).json({ profile: profile });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -264,7 +267,7 @@ router.delete('/experience/:expId', authenticate, async (req, res) => {
       return res.status(404).json({ msg: 'Experience not found' });
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -300,7 +303,7 @@ router.put('/education', authenticate, async (req, res) => {
     profile = await profile.save();
     res.status(200).json({ profile: profile });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -334,32 +337,35 @@ router.delete('/education/:eduId', authenticate, async (req, res) => {
       return res.status(201).json({ msg: 'Experience not found' });
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
 
-//api to get all profile
+//*api to get all developer's profile
 /*
     1. url: /api/profiles/all
     2. fields: no
     3. method: GET
     4. access: PUBLIC
 */
-
+//>Done
 router.get('/all', async (req, res) => {
   try {
-    let profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    let profiles = await Profile.find().populate('user', ['name', 'avatar']); 
+    // populate is used to use the reference thing. 2nd arg tells to include just name, avtar from user schema in all ref places.
     if (!profiles) {
       return res.status(401).json({ msg: 'No profiles found' });
     }
+    console.log(`profiles: ${profiles}`);
     return res.status(200).json({ profiles: profiles });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
 
+//*api to get that developer's profile whose "view profile" is clicked
 //api to get only one profile
 /*
     1. url: /api/profiles/:profileId
@@ -367,7 +373,7 @@ router.get('/all', async (req, res) => {
     3. method: GET
     4. access: PUBLIC
 */
-
+//>Done
 router.get('/:profileId', async (req, res) => {
   try {
     let profileId = req.params.profileId;
@@ -380,7 +386,7 @@ router.get('/:profileId', async (req, res) => {
     }
     return res.status(200).json({ profile: profile });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -393,14 +399,16 @@ router.get('/:profileId', async (req, res) => {
     4. access: PRIVATE
 */
 
+//* Didn't understand
 router.put('/follow/:profileId', authenticate, async (req, res) => {
   try {
     let userId = req.user.id;
-    let profileId = req.params.profileId;
 
+    let profileId = req.params.profileId;
     let profile = await Profile.findById(profileId);
-    let userProfile = await Profile.findOne({ user: userId });
-    // console.log(userProfile);
+
+    let userProfile = await Profile.findOne({ user: userId }); //client's profile
+    // //console.log(userProfile);
 
     var isFollowed = profile.followers.includes(userId);
     var isFollowing = userProfile.following.includes(profile.user._id);
@@ -425,7 +433,7 @@ router.put('/follow/:profileId', authenticate, async (req, res) => {
       .status(200)
       .json({ profile: updatedProfile, userProfile: userProfileUpdate });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });

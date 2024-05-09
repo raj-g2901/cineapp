@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import axios from 'axios';
 
-let DeveloperScreen = () => {
+const DeveloperScreen = () => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
-
-  //Edit
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -19,7 +17,7 @@ let DeveloperScreen = () => {
 
   const getUser = async () => {
     const { data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/users/me',
+      'http://localhost:4000/api/users/me',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -30,11 +28,9 @@ let DeveloperScreen = () => {
     setUser(data.user);
   };
 
-  console.log(user.name);
-
   const fetchProfiles = async () => {
     const { data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/profiles/all',
+      'http://localhost:4000/api/profiles/all',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +39,6 @@ let DeveloperScreen = () => {
     );
     setProfiles(data.profiles);
     setLoading(false);
-    // console.log(data.profiles)
   };
 
   useEffect(() => {
@@ -53,9 +48,9 @@ let DeveloperScreen = () => {
     }
   }, [loggedIn]);
 
-  let clickFollowUser = async (profileId) => {
+  const clickFollowUser = async (profileId) => {
     const { data } = await axios.put(
-      `https://devgram-backend.onrender.com/api/profiles/follow/${profileId}`,
+      `http://localhost:4000/api/profiles/follow/${profileId}`,
       {},
       {
         headers: {
@@ -68,129 +63,100 @@ let DeveloperScreen = () => {
   };
 
   return (
-    <React.Fragment>
-      <section className="p-3">
-        <div className="container">
-          <div className="row animated zoomIn">
-            <div className="col">
-              <p className="h3 text-teal">
-                <i className="fa fa-user-tie" /> Developers
-              </p>
-              <p>List of registered developers</p>
-            </div>
-          </div>
+    <>
+      <section className="bg-black py-12 text-center">
+        <div className="container mx-auto">
+          <h1 className="text-4xl font-bold text-white">
+            Film Makers All Around The World
+          </h1>
         </div>
       </section>
-      <section>
+      <section className="pt-8 bg-black min-h-screen">
         {loading ? (
           <Spinner />
         ) : (
-          <React.Fragment>
-            {profiles.length > 0 ? (
-              <React.Fragment>
-                <div className="container">
-                  <div className="row">
-                    <div className="col">
-                      {profiles.map((profile) => {
-                        return (
-                          <div
-                            className="card my-2 animated zoomIn"
-                            key={profile._id}
+          <>
+            {profiles.length > 0 && (
+              <div className="container mx-auto">
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                  {profiles.map((profile) => (
+                    <div
+                      className="bg-white rounded-lg shadow-md p-8 mb-8"
+                      key={profile._id}
+                    >
+                      <div className="flex items-center mb-4">
+                        <img
+                          src={profile.user.avatar}
+                          className="w-16 h-16 rounded-full mr-4"
+                          alt=""
+                        />
+                        <div>
+                          <h2 className="text-lg font-semibold text-gray-800">
+                            {profile.user.name}
+                          </h2>
+                          <p className="text-sm text-gray-600 mb-2">
+                            <span className="font-bold">Position:</span>{' '}
+                            {profile.designation}
+                          </p>
+                          <p className="text-sm text-gray-600 mb-2">
+                            <span className="font-bold">Company:</span>{' '}
+                            {profile.company}
+                          </p>
+                          <p className="text-sm text-gray-600 mb-2">
+                            <span className="font-bold">Location:</span>{' '}
+                            {profile.location}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <span className="font-bold">Website:</span>{' '}
+                            {profile.website}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {profile.skills.map((skill, index) => (
+                          <span
+                            key={index}
+                            className="text-xs bg-gray-200 px-3 py-1 rounded-full"
                           >
-                            <div className="card-body bg-light-grey">
-                              <div className="row">
-                                <div className="col-md-2">
-                                  <img
-                                    src={profile.user.avatar}
-                                    className="img-fluid img-thumbnail"
-                                    alt=""
-                                  />
-                                </div>
-                                <div className="col-md-5">
-                                  <h2>{profile.user.name}</h2>
-                                  <small className="h6">
-                                    {profile.website}
-                                  </small>
-                                  <br />
-                                  <small className="h6">
-                                    {profile.designation}
-                                  </small>
-                                  <br />
-                                  <small className="h6">
-                                    {profile.company}
-                                  </small>
-                                  <br />
-                                  <small>{profile.location}</small>
-                                  <br />
-                                  <Link
-                                    to={`/developers/${profile._id}`}
-                                    className="btn btn-teal btn-sm"
-                                  >
-                                    View Profile
-                                  </Link>
-
-                                  {loggedIn ? (
-                                    <>
-                                      {profile.user._id !== user._id &&
-                                      loggedIn ? (
-                                        profile.followers.includes(user._id) ? (
-                                          <button
-                                            className="btn btn-like btn-sm me-2"
-                                            onClick={clickFollowUser.bind(
-                                              this,
-                                              profile._id
-                                            )}
-                                            style={{ color: 'blue' }}
-                                          >
-                                            Unfollow
-                                          </button>
-                                        ) : (
-                                          <button
-                                            className="btn btn-primary btn-sm me-2"
-                                            onClick={clickFollowUser.bind(
-                                              this,
-                                              profile._id
-                                            )}
-                                          >
-                                            Follow
-                                          </button>
-                                        )
-                                      ) : (
-                                        <></>
-                                      )}
-                                    </>
-                                  ) : (
-                                    <></>
-                                  )}
-                                </div>
-                                <div className="col-md-5 d-flex justify-content-center flex-wrap ">
-                                  {profile.skills.length > 0 &&
-                                    profile.skills.map((skill, index) => {
-                                      return (
-                                        <div key={index}>
-                                          <span className="badge badge-success p-2 m-1">
-                                            <i className="fa fa-check-circle" />{' '}
-                                            {skill}
-                                          </span>
-                                          <br />
-                                        </div>
-                                      );
-                                    })}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="flex justify-between items-center mt-4">
+                        <Link
+                          to={`/developers/${profile._id}`}
+                          className="bg-black hover:bg-teal-700 text-white px-4 py-2 rounded-md mr-2"
+                        >
+                          View Profile
+                        </Link>
+                        {loggedIn &&
+                          profile.user._id !== user._id &&
+                          (profile.followers.includes(user._id) ? (
+                            <button
+                              className="bg-black hover:bg-blue-600 text-white px-4 py-2 rounded-md ml-2"
+                              onClick={() => clickFollowUser(profile._id)}
+                            >
+                              Unfollow
+                            </button>
+                          ) : (
+                            <button
+                              className="bg-black hover:bg-teal-600 text-white px-4 py-2 rounded-md ml-2"
+                              onClick={() => clickFollowUser(profile._id)}
+                            >
+                              Follow
+                            </button>
+                          ))}
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              </React.Fragment>
-            ) : null}
-          </React.Fragment>
+              </div>
+            )}
+          </>
         )}
       </section>
-    </React.Fragment>
+    </>
   );
 };
+
 export default DeveloperScreen;

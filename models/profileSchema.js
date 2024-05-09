@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 
 const profileSchema = new mongoose.Schema(
   {
-    user: {
+    user: { // use this key name to poulate
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
       required: false,
     },
     company: { type: String, required: false },
+    image: { type: String},
+
     website: { type: String, required: false },
     designation: { type: String, required: false },
     location: { type: String, required: false },
@@ -52,5 +54,5 @@ const profileSchema = new mongoose.Schema(
 );
 
 const Profile = mongoose.model('profile', profileSchema);
-
+// module.exports = mongoose.model('profile', profileSchema); //node js syntax
 export default Profile;

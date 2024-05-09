@@ -58,7 +58,7 @@ let EditProfileScreen = () => {
 
   const getProfile = async (userPassed) => {
     let { status, data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/profiles/me',
+      'http://localhost:4000/api/profiles/me',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ let EditProfileScreen = () => {
         },
       }
     );
-    console.log(data);
+    //console.log(data);
     if (status == 200) {
       let profile = data.profile;
       setProfile(profile);
@@ -97,7 +97,7 @@ let EditProfileScreen = () => {
 
   const getUser = async () => {
     let { data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/users/me',
+      'http://localhost:4000/api/users/me',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ let EditProfileScreen = () => {
     event.preventDefault();
 
     await axios.put(
-      'https://devgram-backend.onrender.com/api/profiles/',
+      'http://localhost:4000/api/profiles/',
       localProfile,
       {
         headers: {

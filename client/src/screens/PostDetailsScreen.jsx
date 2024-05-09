@@ -49,7 +49,7 @@ let PostDetailsScreen = () => {
 
   const getUser = async () => {
     let { data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/users/me',
+      'http://localhost:4000/api/users/me',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -58,12 +58,12 @@ let PostDetailsScreen = () => {
       }
     );
     setUser(data.user);
-    console.log(data.user);
+    //console.log(data.user);
   };
 
   let getPost = async () => {
     let { data } = await axios.get(
-      `https://devgram-backend.onrender.com/api/posts/${postId}`,
+      `http://localhost:4000/api/posts/${postId}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ let PostDetailsScreen = () => {
   let submitCreateComment = async (e) => {
     e.preventDefault();
     await axios.post(
-      `https://devgram-backend.onrender.com/api/posts/comment/${postId}`,
+      `http://localhost:4000/api/posts/comment/${postId}`,
       comment,
       {
         headers: {
@@ -104,7 +104,7 @@ let PostDetailsScreen = () => {
   let clickDeleteComment = async (commentId) => {
     // dispatch(postActions.deleteComment(postId, commentId));
     await axios.delete(
-      `https://devgram-backend.onrender.com/api/posts/comment/${postId}/${commentId}`,
+      `http://localhost:4000/api/posts/comment/${postId}/${commentId}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -123,13 +123,13 @@ let PostDetailsScreen = () => {
         <Spinner />
       ) : (
         <React.Fragment>
-          <section className="p-3">
+          <section className="p-3 bg-black">
             <div className="container">
               <div className="row">
                 <div className="col">
                   <Link
                     to="/posts/list"
-                    className="btn bg-light-grey btn-sm mb-2"
+                    className="btn bg-neutral-950 text-white btn-sm mb-2"
                   >
                     back
                   </Link>
@@ -138,7 +138,7 @@ let PostDetailsScreen = () => {
               <div className="row">
                 <div className="col">
                   {Object.keys(selectedPost).length > 0 && (
-                    <div className="card">
+                    <div className="card bg-neutral-950">
                       <div className="card-body bg-light-grey">
                         <div className="row">
                           <div className="col-md-2 text-center">
@@ -150,7 +150,7 @@ let PostDetailsScreen = () => {
                               height="60"
                             />
                             <br />
-                            <small>{selectedPost.name}</small>
+                            <small className=' text-white'>{selectedPost.name}</small>
                           </div>
                           <div className="col-md-8">
                             <div className="row">
@@ -162,10 +162,10 @@ let PostDetailsScreen = () => {
                                 />
                               </div>
                             </div>
-                            <p style={{ fontWeight: 'bold' }}>
+                            <p className=" text-white" style={{ fontWeight: 'bold' }}>
                               {selectedPost.text}
                             </p>
-                            <small>
+                            <small className=" text-white">
                               {timeDifference(
                                 new Date(),
                                 new Date(selectedPost.createdAt)
@@ -194,7 +194,7 @@ let PostDetailsScreen = () => {
                                     setComment({ text: e.target.value })
                                   }
                                   rows="3"
-                                  className="form-control ms-2"
+                                  className="text-black form-control ms-2 bg-neutral-950"
                                   placeholder="Whats on your mind.."
                                   style={{
                                     height: '100px',
@@ -203,10 +203,10 @@ let PostDetailsScreen = () => {
                                   }}
                                 />
                               </div>
-                              <div>
+                              <div className="mx-20">
                                 <input
                                   type="submit"
-                                  className="btn btn-teal btn-sm"
+                                  className="btn btn-teal btn-sm bg-white  text-black"
                                   value="Comment"
                                 />
                               </div>

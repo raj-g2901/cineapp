@@ -13,6 +13,7 @@ const router = express.Router();
     3. method: POST
     4. access: PUBLIC
 */
+//>Done
 router.post('/signup', async (req, res) => {
   try {
     let { name, email, password } = req.body;
@@ -48,7 +49,7 @@ router.post('/signup', async (req, res) => {
     res.status(200).json({ msg: 'Signed up successfully' });
   } 
   catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -59,8 +60,8 @@ router.post('/signup', async (req, res) => {
     2. fields: {email, password}
     3. method: POST
     4. access: PUBLIC
-*/
-
+*/                                                                 
+//>Done
 router.post('/login', async (req, res) => {
   try {
     let { email, password } = req.body;
@@ -96,33 +97,35 @@ router.post('/login', async (req, res) => {
 
     //JWT token will always change every time a user logs in.
 
-    jwt.sign(payload, process.env.JWT_SECRET_KEY, (error, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET_KEY, (error, token) => {// generating token
       if (error) throw error;
       res.status(200).json({
         msg: 'Logged in successfully',
-        token: token,
+        token: token, // token sent to frontend
       });
     });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
 
-//api to get user info
+//*api to get logged in user's info
 /*
     1. url: /api/users/me
     2. fields: no fields
     3. method: get
     4. access: PRIVATE
 */
-
+//>Done
 router.get('/me', authenticate, async (req, res) => {
   try {
-    let user = await User.findById(req.user.id).select('-password');
-    res.status(200).json({ user: user });
+     
+    let user = await User.findById(req.user.id).select('-password'); // (req.user.id) ye authenticate wale middleware ne bheja hai
+     //DB me se user object me se, password ka info hta kr baki bhej do frontend ko
+    res.status(200).json({ user: user }); //sending to client
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });

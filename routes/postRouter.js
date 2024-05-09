@@ -32,7 +32,7 @@ router.post('/', authenticate, async (req, res) => {
     };
     //create a post
     let post = new Post(newPost);
-    post = await User.populate(post, { path: 'user.avatar' });
+    post = await User.populate(post, { path: 'user.avatar' }); //* this might be wrong
     post = await post.save();
     post = await Post.find({ user: req.user.id }).populate('user', [
       '_id',
@@ -40,7 +40,7 @@ router.post('/', authenticate, async (req, res) => {
     ]);
     res.status(200).json({ post: post });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -62,7 +62,7 @@ router.get('/', authenticate, async (req, res) => {
 
     res.status(200).json({ posts: posts });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -85,7 +85,7 @@ router.get('/:postId', authenticate, async (req, res) => {
 
     res.status(200).json({ post: post });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -109,7 +109,7 @@ router.delete('/:postId', authenticate, async (req, res) => {
 
     res.status(200).json({ msg: 'Post deleted successfully' });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -140,7 +140,7 @@ router.put('/like/:postId', authenticate, async (req, res) => {
     ).populate('user', ['_id', 'avatar']);
     res.status(200).json({ post: post });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -181,7 +181,7 @@ router.post('/comment/:postId', authenticate, async (req, res) => {
     ]);
     res.status(200).json({ post: commentedPost });
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -221,7 +221,7 @@ router.delete('/delete/:postId/:commentId', authenticate, async (req, res) => {
       res.status(200).json({ post: post });
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });

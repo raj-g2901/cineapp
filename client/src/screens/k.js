@@ -4,7 +4,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Spinner from '../components/Spinner';
 
-let FollowPostScreen = () => {
+let PostScreen = () => {
   let [localPost, setLocalPost] = useState({
     text: '',
     image: '',
@@ -15,8 +15,6 @@ let FollowPostScreen = () => {
   let [posts, setPosts] = useState({});
   let [loading, setLoading] = useState(true);
   let [loggedIn, setLoggedIn] = useState(false);
-  let [profile, setProfile] = useState({});
-  let [following, setFollowing] = useState([]);
   useEffect(() => {
     if (!localStorage.getItem('devroom')) {
       navigate('/users/login');
@@ -61,7 +59,7 @@ let FollowPostScreen = () => {
       }
     );
     setUser(data.user);
-    // //console.log(data.user);
+    //console.log(data.user);
   };
 
   const getPosts = async () => {
@@ -79,27 +77,10 @@ let FollowPostScreen = () => {
     setLoading(false);
   };
 
-  const getProfile = async () => {
-    let { data } = await axios.get(
-      'http://localhost:4000/api/profiles/me',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('devroom')}`,
-        },
-      }
-    );
-    setFollowing(data.profile.following);
-    // setProfile(data.profile);
-  };
-
-  //console.log(following);
-
   useEffect(() => {
     if (loggedIn) {
       getUser().then(() => {
         getPosts();
-        getProfile();
       });
     }
   }, [loggedIn]);
@@ -146,7 +127,7 @@ let FollowPostScreen = () => {
       }
     );
     let newArr = posts.filter((post) => {
-      if (post._id === postId) return false;
+      if (post._id == postId) return false;
       return true;
     });
     setPosts(newArr);
@@ -167,20 +148,16 @@ let FollowPostScreen = () => {
     getPosts();
   };
 
-  function check(x) {
-    return x === this;
-  }
-
   return (
     <React.Fragment>
       {/* { <pre>{JSON.stringify(posts)}</pre> } */}
 
-      <section className="p-3 bg-black">
+      <section className="p-3 ">
         <div className="container">
           <div className="row">
             <div className="col">
-              <p className="h3 text-teal text-white">Discover what other Film Makers have to say!</p>
-              <p className="text-white pb-3">
+              <p className="h3 text-teal">Welcome to Dev-Room Posts</p>
+              <p>
                 Post your achievements, suceess and needs and share with other
                 developers!
               </p>
@@ -206,7 +183,7 @@ let FollowPostScreen = () => {
                       value={localPost.text}
                       onChange={updateInput}
                       rows="3"
-                      className="form-control bg-neutral-950"
+                      className="form-control"
                       placeholder="Whats on your mind.."
                       style={{
                         height: '100px',
@@ -217,7 +194,7 @@ let FollowPostScreen = () => {
                   </div>
                   <div className="input-group mb-3">
                     <div className="input-group-prepend">
-                      <span className="input-group-text text-white" id="basic-addon1">
+                      <span className="input-group-text" id="basic-addon1">
                         Image Url
                       </span>
                     </div>
@@ -226,14 +203,14 @@ let FollowPostScreen = () => {
                       value={localPost.image}
                       onChange={updateInput}
                       type="text"
-                      className="form-control bg-neutral-950"
+                      className="form-control"
                       placeholder="Image Url"
                     />
                   </div>
                   <div>
                     <input
                       type="submit"
-                      className="btn btn-teal btn-sm bg-white"
+                      className="btn btn-teal btn-sm"
                       value="Post"
                     />
                   </div>
@@ -244,7 +221,7 @@ let FollowPostScreen = () => {
           <hr />
         </div>
       </section>
-      <section className='p-3 bg-black'>
+      <section>
         {loading ? (
           <Spinner />
         ) : (
@@ -257,8 +234,8 @@ let FollowPostScreen = () => {
                       .slice(0)
                       .reverse()
                       .map((post) => {
-                        return following.some(check, post.user._id) ? (
-                          <div className="card my-2 bg-neutral-900" key={post._id}>
+                        return (
+                          <div className="card my-2" key={post._id}>
                             <div className="card-body bg-light-grey">
                               <div className="row">
                                 <div className="col-md-2">
@@ -270,7 +247,7 @@ let FollowPostScreen = () => {
                                     height="50"
                                   />
                                   <br />
-                                  <small className="text-white">{post.name}</small>
+                                  <small>{post.name}</small>
                                 </div>
                                 <div className="col-md-8">
                                   <div className="row">
@@ -283,11 +260,11 @@ let FollowPostScreen = () => {
                                     </div>
                                   </div>
                                   <Link to={`/posts/${post._id}`}>
-                                    <p className="text-white" style={{ fontWeight: 'bold' }}>
+                                    <p style={{ fontWeight: 'bold' }}>
                                       {post.text}
                                     </p>
                                   </Link>
-                                  <small className="text-white">
+                                  <small>
                                     {timeDifference(
                                       new Date(),
                                       new Date(post.createdAt)
@@ -344,7 +321,7 @@ let FollowPostScreen = () => {
                               </div>
                             </div>
                           </div>
-                        ) : null;
+                        );
                       })}
                   </div>
                 </div>
@@ -356,4 +333,4 @@ let FollowPostScreen = () => {
     </React.Fragment>
   );
 };
-export default FollowPostScreen;
+export default PostScreen;

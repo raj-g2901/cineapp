@@ -59,7 +59,7 @@ let CreateProfileScreen = () => {
   let submitCreateProfile = async (e) => {
     e.preventDefault();
     await axios.post(
-      'https://devgram-backend.onrender.com/api/profiles/',
+      'http://localhost:4000/api/profiles/',
       profile,
       {
         headers: {

@@ -4,272 +4,140 @@ import Spinner from '../components/Spinner';
 import axios from 'axios';
 import { ExternalLink } from 'react-external-link';
 
-let DeveloperDetailsScreen = () => {
+const DeveloperDetailsScreen = () => {
   const [selectedProfile, setSelectedProfile] = useState({});
-  let [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  let developerId = useParams().developerId;
+  const { developerId } = useParams();
 
   const fetchDeveloper = async () => {
-    const { data } = await axios.get(
-      `https://devgram-backend.onrender.com/api/profiles/${developerId}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    setSelectedProfile(data.profile);
-    setLoading(false);
+    try {
+      const { data } = await axios.get(
+        `http://localhost:4000/api/profiles/${developerId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      setSelectedProfile(data.profile);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching developer:', error);
+      setLoading(false);
+    }
   };
 
-  console.log(selectedProfile);
-
   useEffect(() => {
-    fetchDeveloper(developerId);
+    fetchDeveloper();
   }, [developerId]);
 
   return (
-    <React.Fragment>
+    <div className="bg-black text-white">
       {loading ? (
         <Spinner />
       ) : (
-        <React.Fragment>
+        <div className="container mx-auto p-4">
           {Object.keys(selectedProfile).length > 0 && (
             <React.Fragment>
-              <section className="p-3">
-                <div className="container">
-                  <div className="row animated zoomIn">
-                    <div className="col">
-                      <p className="h3 text-teal text-center">
-                        <i className="fa fa-user-tie" />{' '}
-                        {selectedProfile.user.name}'s Profile{' '}
-                      </p>
-                    </div>
+              <section className="text-center">
+                <h1 className="text-3xl font-bold m-3">
+                  <i className="fas fa-user-tie"></i> {selectedProfile.user.name}'s Profile
+                </h1>
+              </section>
+
+              <section className=" text-white  p-4">
+                <div className="flex flex-col items-center bg-neutral-950 py-4">
+                  <img
+                    src={selectedProfile.user.avatar}
+                    alt="Profile"
+                    className="rounded-full w-32 h-32 py-1"
+                  />
+                  <h2 className="text-2xl font-bold">{selectedProfile.user.name}</h2>
+                  <p className="text-lg">{selectedProfile.website}</p>
+                  <p className="text-lg">{selectedProfile.designation}</p>
+                  <p className="text-lg">{selectedProfile.company}</p>
+                  <p>Followers: {selectedProfile.followers.length}</p>
+                  <p>Following: {selectedProfile.following.length}</p>
+                  <p>{selectedProfile.location}</p>
+                  <div className="flex items-center space-x-4 mt-4">
+                    <ExternalLink href={selectedProfile.social.facebook} target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-facebook text-2xl"></i>
+                    </ExternalLink>
+                    <ExternalLink href={selectedProfile.social.twitter} target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-twitter text-2xl"></i>
+                    </ExternalLink>
+                    <ExternalLink href={selectedProfile.social.linkedin} target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-linkedin text-2xl"></i>
+                    </ExternalLink>
+                    <ExternalLink href={selectedProfile.githubUserName} target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-github text-2xl"></i>
+                    </ExternalLink>
+                    <ExternalLink href={selectedProfile.social.instagram} target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-instagram text-2xl"></i>
+                    </ExternalLink>
+                    <ExternalLink href={selectedProfile.social.youtube} target="_blank" rel="noopener noreferrer">
+                      <i className="fab fa-youtube text-2xl"></i>
+                    </ExternalLink>
                   </div>
                 </div>
               </section>
-              <section>
-                <div className="container bg-success text-white text-center p-3">
-                  <div className="row">
-                    <div className="col">
-                      <img
-                        src={selectedProfile.user.avatar}
-                        alt=""
-                        width="200"
-                        height="200"
-                        className="rounded-circle profile-img"
-                      />
-                      <p className="h2">{selectedProfile.user.name}</p>
-                      <p className="h6">{selectedProfile.website}</p>
-                      <p className="h6">{selectedProfile.designation}</p>
-                      <p className="h6">{selectedProfile.company}</p>
-                      <p className="h6">
-                        Followers: {selectedProfile.followers.length}
-                      </p>
-                      <p className="h6">
-                        Following: {selectedProfile.following.length}
-                      </p>
-                      <p>{selectedProfile.location}</p>
-                      <div className="d-flex flex-row justify-content-center">
-                        <div className="p-2">
-                          <ExternalLink
-                            href={selectedProfile.social.facebook}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i className="fab fa-facebook" />
-                          </ExternalLink>
-                        </div>
 
-                        <div className="p-2">
-                          <ExternalLink
-                            href={selectedProfile.social.twitter}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i className="fab fa-twitter" />
-                          </ExternalLink>
-                        </div>
-                        <div className="p-2">
-                          <ExternalLink
-                            href={selectedProfile.social.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i className="fab fa-linkedin" />
-                          </ExternalLink>
-                        </div>
-                        <div className="p-2">
-                          <ExternalLink
-                            href={selectedProfile.githubUserName}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i className="fab fa-github" />
-                          </ExternalLink>
-                        </div>
-                        <div className="p-2">
-                          <ExternalLink
-                            href={selectedProfile.social.instagram}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i className="fab fa-instagram" />
-                          </ExternalLink>
-                        </div>
-                        <div className="p-2">
-                          <ExternalLink
-                            href={selectedProfile.social.youtube}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i className="fab fa-youtube" />
-                          </ExternalLink>
-                        </div>
-                      </div>
+              <section className="container mx-auto mt-4">
+                <div className="card bg-comment text-black my-4">
+                  <div className="card-body">
+                    <h2 className="text-2xl font-bold">{selectedProfile.user.name}'s Biography</h2>
+                    <p>{selectedProfile.bio}</p>
+                  </div>
+                </div>
+
+                <div className="card bg-light-grey text-teal my-4">
+                  <div className="card-body">
+                    <h2 className="text-2xl font-bold text-black">{selectedProfile.user.name}'s Skills</h2>
+                    <div className="flex flex-wrap">
+                      {selectedProfile.skills.map((skill, index) => (
+                        <span key={index} className="badge badge-dark p-2 m-2">{skill}</span>
+                      ))}
                     </div>
                   </div>
                 </div>
-                <div className="container ">
-                  <div className="row">
-                    <div className="col text-center">
-                      <div className="card my-2">
-                        <div className="card-body bg-comment text-black">
-                          <p className="h3">
-                            {selectedProfile.user.name}'s Biography
-                          </p>
-                          <p>{selectedProfile.bio}</p>
-                        </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {selectedProfile.experience.map(exp => (
+                    <div key={exp._id} className="card bg-primary text-white  my-4">
+                      <div className="card-body bg-neutral-900">
+                        <h2 className="text-2xl font-bold">Experience</h2>
+                        <p><span className="font-bold">Title:</span> {exp.title}</p>
+                        <p><span className="font-bold">Company:</span> {exp.company}</p>
+                        <p><span className="font-bold">Location:</span> {exp.location}</p>
+                        <p><span className="font-bold">From:</span> {exp.from}</p>
+                        <p><span className="font-bold">To:</span> {exp.to !== ' ' ? exp.to : 'Current'}</p>
+                        <p><span className="font-bold">Description:</span> {exp.description}</p>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="container">
-                  <div className="row">
-                    <div className="col text-center">
-                      <div className="card my-2">
-                        <div className="card-body bg-light-grey text-teal">
-                          <p className="h3">
-                            {selectedProfile.user.name}'s Skills
-                          </p>
-                          {selectedProfile.skills.map((skill) => {
-                            return (
-                              <span className="badge badge-dark p-2 m-2">
-                                {skill}
-                              </span>
-                            );
-                          })}
-                        </div>
+                  ))}
+
+                  {selectedProfile.education.map(edu => (
+                    <div key={edu._id} className="card bg-warning text-white my-4">
+                      <div className="card-body bg-neutral-900">
+                        <h2 className="text-2xl font-bold">Education</h2>
+                        <p><span className="font-bold">School:</span> {edu.school}</p>
+                        <p><span className="font-bold">Degree:</span> {edu.degree}</p>
+                        <p><span className="font-bold">Field of Study:</span> {edu.fieldOfStudy}</p>
+                        <p><span className="font-bold">From:</span> {edu.from}</p>
+                        <p><span className="font-bold">To:</span> {edu.to !== ' ' ? edu.to : 'Current'}</p>
+                        <p><span className="font-bold">Description:</span> {edu.description}</p>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="container">
-                  <div className="row">
-                    <div className="col-md-6">
-                      {selectedProfile.experience.length > 0 ? (
-                        <React.Fragment>
-                          <div className="card">
-                            <div className="card-body bg-primary text-white">
-                              <p className="h3">Experience</p>
-                              <ul className="list-group">
-                                {selectedProfile.experience.map((exp) => {
-                                  return (
-                                    <li
-                                      className="list-group-item my-2"
-                                      key={exp._id}
-                                    >
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        Title : {exp.title}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        Company : {exp.company}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        Location : {exp.location}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        From : {exp.from}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        To :{' '}
-                                        {exp.to != ' ' ? exp.to : 'Current'}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        Description : {exp.description}
-                                      </span>
-                                      <br />
-                                    </li>
-                                  );
-                                })}
-                              </ul>
-                            </div>
-                          </div>
-                        </React.Fragment>
-                      ) : null}
-                    </div>
-                    <div className="col-md-6">
-                      {selectedProfile.experience.length > 0 ? (
-                        <React.Fragment>
-                          <div className="card">
-                            <div className="card-body bg-warning text-white">
-                              <p className="h3">Education</p>
-                              <ul className="list-group">
-                                {selectedProfile.education.map((edu) => {
-                                  return (
-                                    <li
-                                      className="list-group-item my-2"
-                                      key={edu._id}
-                                    >
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        School : {edu.school}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        Degree : {edu.degree}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        Field of Study : {edu.fieldOfStudy}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        From : {edu.from}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        To :{' '}
-                                        {edu.to != ' ' ? edu.to : 'Current'}
-                                      </span>
-                                      <br />
-                                      <span style={{ fontWeight: 'bold' }}>
-                                        Description : {edu.description}
-                                      </span>
-                                      <br />
-                                    </li>
-                                  );
-                                })}
-                              </ul>
-                            </div>
-                          </div>
-                        </React.Fragment>
-                      ) : null}
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </section>
             </React.Fragment>
           )}
-        </React.Fragment>
+        </div>
       )}
-      <div style={{ marginBottom: '150px' }} />
-    </React.Fragment>
+    </div>
   );
 };
+
 export default DeveloperDetailsScreen;

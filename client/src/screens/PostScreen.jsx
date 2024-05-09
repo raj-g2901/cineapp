@@ -50,7 +50,7 @@ let PostScreen = () => {
 
   const getUser = async () => {
     let { data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/users/me',
+      'http://localhost:4000/api/users/me',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -59,12 +59,12 @@ let PostScreen = () => {
       }
     );
     setUser(data.user);
-    console.log(data.user);
+    //console.log(data.user);
   };
 
   const getPosts = async () => {
     let { data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/posts/',
+      'http://localhost:4000/api/posts/',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ let PostScreen = () => {
       }
     );
     setPosts(data.posts);
-    console.log(data.posts);
+    //console.log(data.posts);
     setLoading(false);
   };
 
@@ -96,7 +96,7 @@ let PostScreen = () => {
     e.preventDefault();
     if (localPost.text.trim() !== '') {
       const { data } = await axios.post(
-        'https://devgram-backend.onrender.com/api/posts/',
+        'http://localhost:4000/api/posts/',
         localPost,
         {
           headers: {
@@ -106,7 +106,7 @@ let PostScreen = () => {
         }
       );
       Swal.fire('Post created successfully', '', 'success');
-      console.log(user);
+      //console.log(user);
       getPosts();
     }
 
@@ -118,7 +118,7 @@ let PostScreen = () => {
 
   let clickDeletePost = async (postId) => {
     const { data } = await axios.delete(
-      `https://devgram-backend.onrender.com/api/posts/${postId}`,
+      `http://localhost:4000/api/posts/${postId}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ let PostScreen = () => {
 
   let clickLikePost = async (postId) => {
     const { data } = await axios.put(
-      `https://devgram-backend.onrender.com/api/posts/like/${postId}`,
+      `http://localhost:4000/api/posts/like/${postId}`,
       {},
       {
         headers: {
@@ -152,12 +152,12 @@ let PostScreen = () => {
     <React.Fragment>
       {/* { <pre>{JSON.stringify(posts)}</pre> } */}
 
-      <section className="p-3">
+      <section className="p-3 bg-black">
         <div className="container">
           <div className="row">
             <div className="col">
-              <p className="h3 text-teal">Welcome to Dev-Room Posts</p>
-              <p>
+              <p className="h3 text-teal text-white">Discover what other Film Makers have to say!</p>
+              <p className="text-white pb-3">
                 Post your achievements, suceess and needs and share with other
                 developers!
               </p>
@@ -177,13 +177,14 @@ let PostScreen = () => {
                         className="rounded-circle me-2 mt-3"
                       />
                     </div>
+
                     <textarea
                       required
                       name="text"
                       value={localPost.text}
                       onChange={updateInput}
                       rows="3"
-                      className="form-control"
+                      className="form-control  bg-neutral-950 text-black "
                       placeholder="Whats on your mind.."
                       style={{
                         height: '100px',
@@ -193,8 +194,8 @@ let PostScreen = () => {
                     />
                   </div>
                   <div className="input-group mb-3">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text" id="basic-addon1">
+                    <div className="input-group-prepend pr-1">
+                      <span className="input-group-text text-white" id="basic-addon1">
                         Image Url
                       </span>
                     </div>
@@ -203,14 +204,14 @@ let PostScreen = () => {
                       value={localPost.image}
                       onChange={updateInput}
                       type="text"
-                      className="form-control"
+                      className="form-control  bg-neutral-950"
                       placeholder="Image Url"
                     />
                   </div>
                   <div>
                     <input
                       type="submit"
-                      className="btn btn-teal btn-sm"
+                      className="btn btn-teal btn-sm bg-white"
                       value="Post"
                     />
                   </div>
@@ -218,10 +219,10 @@ let PostScreen = () => {
               </div>
             )}
           </div>
-          <hr />
+          <hr className=''/>
         </div>
       </section>
-      <section>
+      <section className="p-3 bg-black">
         {loading ? (
           <Spinner />
         ) : (
@@ -235,8 +236,8 @@ let PostScreen = () => {
                       .reverse()
                       .map((post) => {
                         return (
-                          <div className="card my-2" key={post._id}>
-                            <div className="card-body bg-light-grey">
+                          <div className="card my-2 bg-neutral-900" key={post._id}>
+                            <div className="card-body bg-light-grey text-white">
                               <div className="row">
                                 <div className="col-md-2">
                                   <img
@@ -247,7 +248,7 @@ let PostScreen = () => {
                                     height="50"
                                   />
                                   <br />
-                                  <small>{post.name}</small>
+                                  <small className="text-white">{post.name}</small>
                                 </div>
                                 <div className="col-md-8">
                                   <div className="row">
@@ -301,7 +302,7 @@ let PostScreen = () => {
 
                                   <Link
                                     to={`/posts/${post._id}`}
-                                    className="btn btn-warning btn-sm me-2"
+                                    className="btn  btn-sm me-2 bg-black text-white"
                                   >
                                     <i className="fab fa-facebook-messenger me-2" />{' '}
                                     Discussions {post.comments.length}

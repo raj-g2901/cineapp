@@ -22,7 +22,7 @@ let DashBoard = () => {
 
   const getProfile = async () => {
     let { status, data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/profiles/me',
+      'http://localhost:4000/api/profiles/me',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -30,13 +30,13 @@ let DashBoard = () => {
         },
       }
     );
-    console.log(data);
+    //console.log(data);
     if (status == 200) setProfile(data.profile);
   };
 
   const getUser = async () => {
     let { data } = await axios.get(
-      'https://devgram-backend.onrender.com/api/users/me',
+      'http://localhost:4000/api/users/me',
       {
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ let DashBoard = () => {
       }
     );
     setUser(data.user);
-    console.log(data.user);
+    //console.log(data.user);
     setLoading(false);
   };
 
@@ -58,7 +58,7 @@ let DashBoard = () => {
 
   let clickDeleteExperience = async (experienceId) => {
     const { data } = await axios.delete(
-      `https://devgram-backend.onrender.com/api/profiles/experience/${experienceId}`,
+      `http://localhost:4000/api/profiles/experience/${experienceId}`,
       {
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ let DashBoard = () => {
 
   let clickDeleteEducation = async (educationId) => {
     const { data } = await axios.delete(
-      ` https://devgram-backend.onrender.com/api/profiles/education/${educationId}`,
+      ` http://localhost:4000/api/profiles/education/${educationId}`,
       {
         headers: {
           'Content-Type': 'application/json',

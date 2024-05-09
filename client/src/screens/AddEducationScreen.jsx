@@ -37,7 +37,7 @@ let AddEducationScreen = () => {
   let submitAddEducation = async (e) => {
     e.preventDefault();
     await axios.put(
-      'https://devgram-backend.onrender.com/api/profiles/education/',
+      'http://localhost:4000/api/profiles/education/',
       education,
       {
         headers: {
